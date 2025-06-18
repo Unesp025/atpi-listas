@@ -1,0 +1,2 @@
+a) C armazena listas de valores em "endereços de memória sequenciais"
+b)
