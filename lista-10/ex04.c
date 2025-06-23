@@ -22,17 +22,14 @@ void imprimirArrayDinamico(int* array, int tamanho)
 	}
 }
 
-int* reduzirArrayAMetade(int* array, int tamanho)
+int* realocarEspacoDeMemoria(int* array, int novoTamanho)
 {
-	int novoTamanho = tamanho%2==0 
-		? (tamanho/2)
-		: (int) (tamanho/2) + 1;
-	int* metade = (int*) malloc(novoTamanho*sizeof(int));
+	int* novoArray = (int*) malloc(novoTamanho*sizeof(int));
 	for (int i = 0; i<novoTamanho; i++)
 	{
-		metade[i] = array[i];
+		novoArray[i] = array[i];
 	}
-	return metade;
+	return novoArray;
 }
 
 int main()
@@ -42,21 +39,17 @@ int main()
 	printf("Informe o tamanho do array: ");
 	scanf("%d", &tamanho);
 	
-	printf("Passe abaixo todos os elementos do array:\n");
+	printf("\nPasse abaixo todos os elementos do array:\n");
 	array = preencherArrayDinamico(tamanho);
-	int* arrayMetade = reduzirArrayAMetade(array, tamanho);
-	int tamanhoMetade = tamanho%2==0 
-		? (tamanho/2)
-		: (int) (tamanho/2) + 1;
 
-	printf("\n\n[Array original]\n");
-	imprimirArrayDinamico(array, tamanho);
-	
-	printf("\n\n[Array reduzido a metade]\n");
-	imprimirArrayDinamico(arrayMetade, tamanhoMetade);
+	// Realocando memoria do ponteiro
+	int tamanhoMetade = tamanho/2;
+	array = realocarEspacoDeMemoria(array, tamanhoMetade);
+
+	printf("\n[Array reduzido a metade]\n");
+	imprimirArrayDinamico(array, tamanhoMetade);
 
 	free(array);
-	free(arrayMetade);
 	return 0;
 }
 
