@@ -1,0 +1,7 @@
+a) A desreferenciação do ponteiro "number" está ocorrendo antes de ele ser inicializado.
+
+b) Há um erro de tipagem. 
+Um ponteiro de inteiro não pode apontar para um ponteiro de float (pelo menos não sem uma 
+conversão explicita do tipo (chamado "type cast")).
+
+c)
