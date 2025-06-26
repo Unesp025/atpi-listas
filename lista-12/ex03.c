@@ -1,26 +1,13 @@
 #include<stdio.h>
 
-/*
-    int *vetor = (int*)malloc(sizeof(int));
-    matriz com ponteiros: 
-    int **matriz = (int**) malloc(sizeof(int));
-        - para cada espaço na matriz, alocar um vetor.
-*/
-
-/*
-    Lista de nos:
-    (valor)-->(prox.)-->NULL
-
-*/
-
-// é uma lista.
+// se a estrutura abaixo é uma lista.
 typedef struct no
 {
     int valor;
     struct no *proximo;
 } No;
 
-// deve ser uma lista de listas
+// então essa estrutura deve ser uma lista de listas... uma matriz
 typedef struct noLinha
 {
     No *valores;

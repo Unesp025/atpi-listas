@@ -1,11 +1,11 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 
-typedef struct 
+typedef struct
 {
     char nome[50];
-    float notaExercicios;
-    float notaProva01;
-    float notaProva02;
+    float notaEx, notaP1, notaP2;
 } Aluno;
 
 typedef struct no
@@ -14,41 +14,72 @@ typedef struct no
     struct no *proximo;
 } No;
 
-float calcularMedia(Aluno *aluno)
+Aluno *inicializarAluno(char nome[50], float notaEx, float notaP1, float notaP2)
 {
-    float provas = ( aluno->notaProva01*4 + aluno->notaProva02*6)/10;
-    return (aluno->notaExercicios* 0.2 + provas * 0.8);
+    Aluno *aluno = (Aluno *) malloc(sizeof(Aluno));
+    if (aluno==NULL) return NULL;
+    strcpy(aluno->nome, nome);
+    aluno->notaEx = notaEx;
+    aluno->notaP1 = notaP1;
+    aluno->notaP2 = notaP2;
+    return aluno;
 }
 
-void imprimirMedia(No *listaAlunos)
+float calcularMedia(Aluno *aluno)
 {
-    No *atual = listaAlunos;
-    while (atual->proximo!=NULL)
+    float mediaProvas = (aluno->notaP1 * 4 + aluno->notaP2 * 6)/10;
+    return aluno->notaEx*0.2 + mediaProvas*0.8;
+}
+
+No *inicializarNo(Aluno *aluno)
+{
+    No *novo = (No *) malloc(sizeof(No));
+    if (novo==NULL) return NULL; // espaço solicitado não está disponível na memoria
+    novo->aluno = aluno;
+    novo->proximo = NULL;
+
+    return novo;
+}
+
+No *adicionarNo(No *lista, Aluno *aluno)
+{
+    if (lista->proximo==NULL)
     {
-        printf("\nAluno: %s\nMedia: %.2f\n", atual->aluno->nome, calcularMedia(atual->aluno));
+        No *novo = inicializarNo(aluno);
+        lista->proximo = novo;
+        return (novo);
+    }
+    else 
+    {
+        return(adicionarNo(lista->proximo, aluno));
+    }
+}
+
+void imprimirAlunos(No *lista)
+{
+    No *atual = lista;
+    while (atual!=NULL)
+    {
+        printf("\nNome: %s\nMedia: %.2f\n", atual->aluno->nome, calcularMedia((atual->aluno)));
         atual = atual->proximo;
     }
 }
 
 int main()
 {
-    // Aluno *a = (Aluno *) malloc(sizeof(Aluno));
-    // Aluno *b = (Aluno *) malloc(sizeof(Aluno));
-    Aluno a, b;
-    No na, nb;
+    Aluno *a, *b, *c;
+    a = inicializarAluno("adelaide", 6.7, 8.0, 8.3);
+    b = inicializarAluno("barto", 7.8, 6.0, 7.6);
+    c = inicializarAluno("coliano", 8.9, 7.0, 7.5);
+    No *alunos = inicializarNo(a);
+    adicionarNo(alunos, b);
+    adicionarNo(alunos, c);
 
-    a.notaExercicios = 3.0;
-    a.notaProva01 = 5.0;
-    a.notaProva02 = 8.0;
+    imprimirAlunos(alunos);
 
-    b.notaExercicios = 2.0;
-    b.notaProva01 = 6.0;
-    b.notaProva02 = 4.0;
-
-    na.aluno = &a;
-    nb.aluno = &b;
-    na.proximo = &nb;
-
-    imprimirMedia(&na);
+    free(a);
+    free(b);
+    free(c);
+    free(alunos);
     return(0);
 }
