@@ -1,57 +1,38 @@
 #include<stdio.h>
+#include<stdlib.h>
 #include<string.h>
 
-// deixa pra complicar depois 
-typedef struct nota
+typedef struct
 {
-    float valor;
-    struct nota *proxima;
-} Nota;
-
-typedef struct 
-{
-    char nome[50];
-    float notaExercicios;
-    float notaProva01;
-    float notaProva02;
+	char nome[50];
+	float notaExercicios, notaP1, notaP2;
 } Aluno;
 
-/*
-outra possibilidade
-void registrarAluno(char nome[50], Aluno *a)
+Aluno inicializarAluno(char nome[50], float notaExercicios, float notaP1, float notaP2)
 {
-    Aluno *aluno;
-    strcpy(aluno->nome, nome);
+	Aluno aluno;
+	strcpy(aluno.nome, nome);
+	aluno.notaExercicios = notaExercicios;
+	aluno.notaP1 = notaP1;
+	aluno.notaP2 = notaP2;
 
-    return aluno;
-}
-*/
-
-Aluno *registrarAluno(char nome[50])
-{
-    Aluno *aluno = (Aluno *) malloc(sizeof(Aluno));
-    strcpy(aluno->nome, nome);
-
-    return aluno;
+	return (aluno);
 }
 
-float calcularMedia(Aluno *aluno)
+float calcularMediaFinal(Aluno aluno)
 {
-    float provas = ( aluno->notaProva01*4 + aluno->notaProva02*6)/10;
-    return (aluno->notaExercicios* 0.2 + provas * 0.8);
+	float mediaProvas = (aluno.notaP1*4 + aluno.notaP2*6)/10;
+	return (aluno.notaExercicios*0.2 + mediaProvas*0.8);
+}
+
+void imprimirAluno(Aluno aluno)
+{
+	printf("Nome: %s\nMedia Final: %.2f", aluno.nome, calcularMediaFinal(aluno));
 }
 
 int main()
 {
-    /*
-        a outra possibilidade
-        Aluno aluno; 
-        registrarAluno("matheus", &aluno);
-    */
-    Aluno *aluno = registrarAluno("bruno");
-    aluno->notaExercicios = 5.6;
-    aluno->notaProva01 = 8.7;
-    aluno->notaProva02 = 6.3;
-
-    printf("media de %c: %f", aluno->nome, calcularMedia(aluno));
+	Aluno a = inicializarAluno("bruno", 7.8, 6.5, 8.0);
+	imprimirAluno(a);
+	return(0);
 }
