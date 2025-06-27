@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<stdlib.h>
 
 typedef struct 
 {
@@ -17,7 +18,7 @@ Flutuante *somar(Flutuante a, Flutuante b)
     Flutuante *soma = (Flutuante*) malloc(sizeof(Flutuante));
     int parteInteira = a.valorInteiro + b.valorInteiro;
     int parteDecimal = a.valorDecimal + b.valorDecimal;
-    if (soma->valorDecimal>=10000)
+    if (parteDecimal>=10000)
     {
         parteInteira++;
         parteDecimal -= 10000;
@@ -52,13 +53,18 @@ int main()
 {
     Flutuante a, b;
     a.valorInteiro = 9;
-    a.valorDecimal = 2345;
+    a.valorDecimal = 6594;
     b.valorInteiro = 6;
-    a.valorDecimal = 7853;
+    b.valorDecimal = 7853;
 
     Flutuante *soma = somar(a, b);
     Flutuante *subtracao = subtrair(a, b);
 
+    printf("Valores: \n");
+    imprimir(a);
+    printf("  |  ");
+    imprimir(b);
+    printf("\n");
     printf("Soma: ");
     imprimir(*soma);
     printf("\nSubtracao: ");
