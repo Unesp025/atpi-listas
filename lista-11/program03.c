@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
 {
     // if (argc == 0) return (1); // usar quando for passar o caminho como argumento
 	// imprimirMatriz(cartela, linhas, colunas);
-    gerarCsvDaCartela("./output03.csv");
+    gerarCsvDaCartela("./output/output03.csv");
     printf("Arquivo escrito com sucesso");
     return(0);
 }
