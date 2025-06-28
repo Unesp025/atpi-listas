@@ -45,19 +45,34 @@ char **obterMenuDeArquivo(char caminho[50])
         {
             fgets(linha, tamanho, input);
 
-            // char *itemAtualQuantidade = (strtok(linha, " "));
-            // char *itemAtualNome = (strtok(NULL, " "));
-            strcpy(arrayListaPedidos[l], (strtok(linha, " ")));
-            strcpy(arrayListaPedidos[l+1], (strtok(NULL, " ")));
+            char *itemAtualQuantidade = (strtok(linha, " "));
+            char *itemAtualNome = (strtok(NULL, " "));
+            // strcpy(arrayListaPedidos[l], (strtok(linha, " ")));
+            // strcpy(arrayListaPedidos[l+1], (strtok(NULL, " ")));
 
-            ponteiroListaPedidos[l] = arrayListaPedidos[l];
-            ponteiroListaPedidos[l+1] = arrayListaPedidos[l+1];
-
+            // ponteiroListaPedidos[l] = arrayListaPedidos[l];
+            // ponteiroListaPedidos[l+1] = arrayListaPedidos[l+1];
+            ponteiroListaPedidos[l] = itemAtualQuantidade;
+            ponteiroListaPedidos[l+1] = itemAtualNome;
+            
             // printf("Enderecos atuais: [quantidade] %d, [item] %d\n", &arrayListaPedidos[l], &arrayListaPedidos[l+1]);
             printf("ptr: %s x %senderecos: %d \tx %d\n\n", 
                 ponteiroListaPedidos[l], ponteiroListaPedidos[l+1],
                 &ponteiroListaPedidos[l], &ponteiroListaPedidos[l+1]);
         }
+        printf("\nImprimindo array:\n");
+        for (int i = 0; i<quantidadeItens*2; i++)
+        {
+            printf("%s", ponteiroListaPedidos[i]);
+        }
+        for (int i = 0; i < quantidadeItens*2; i+=2)
+        {
+        // printf("%s x\t %s\n", matriz[i], matriz[i+1]);
+        printf("ptr: %s x %senderecos: %d \tx %d\n\n", 
+                ponteiroListaPedidos[i], ponteiroListaPedidos[i+1],
+                &ponteiroListaPedidos[i], &ponteiroListaPedidos[i+1]);
+        }
+
         fclose(input);
         return (ponteiroListaPedidos);
     }
