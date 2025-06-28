@@ -13,44 +13,73 @@ int **alocarMatriz(int linhas, int colunas)
     return matriz;
 }
 
+int obterLinhas(char caminho[100])
+{
+    FILE *input = fopen(caminho, "r");
+    if (input!=NULL)
+    {
+        int tamanho = 20;
+        char linha[tamanho];
+        
+        fgets(linha, tamanho, input);
+        fclose(input);
+        return (atoi(strtok(linha, ",")));
+    }
+    return (NULL);
+}
+
+int obterColunas(char caminho[100])
+{
+    FILE *input = fopen(caminho, "r");
+    if (input!=NULL)
+    {
+        int tamanho = 20;
+        char linha[tamanho];
+
+        fgets(linha, tamanho, input);
+        strtok(linha, ",");
+        return (atoi(strtok(NULL,",")));
+    }
+    return (NULL);
+}
+
 int **obterMatrizDeArquivo(char caminho[100])
 {
     int linhas, colunas;
     int tamanhoLinha = 20; // suporta no maximo matrizes 20x20
     char linha[tamanhoLinha];
     char *celulaAtual;
+    int valorAtual;
     FILE *input = fopen(caminho, "r");
 
     if (input != NULL)
     {
         fgets(linha, tamanhoLinha, input);
-        celulaAtual = strtok(linha, ",");
-        linhas = *celulaAtual - '0';
-        celulaAtual = strtok(NULL, ",");
-        colunas = *celulaAtual - '0';
-        printf("Linhas: %d | Colunas: %d\n", linhas, colunas);
+        linhas = obterLinhas(caminho);
+        colunas = obterColunas(caminho);
         
         int **matriz = alocarMatriz(linhas, colunas);
-        int i = 0, j = 0;
+        int i = 0, j;
         
         while (fgets(linha, tamanhoLinha, input))
         {
+            j = 0;
             celulaAtual = strtok(linha, ",");
             do
             {
                 if (celulaAtual)
                 {
-                    printf("%d\t", atoi(celulaAtual));
-                    // matriz[i][j] = atoi(celulaAtual);
+                    valorAtual = atoi(celulaAtual);
+                    matriz[i][j] = valorAtual;
                     celulaAtual = strtok(NULL, ",");
                 }
                 j++;
             }
             while(celulaAtual!= NULL);
-            printf("\n");
             i++;
         }
         fclose(input); 
+        return (matriz);
     }
     return NULL;
 }
@@ -67,9 +96,19 @@ void imprimirMatriz(int **matriz, int linhas, int colunas)
     }
 }
 
-int **somarMatrizes(int **A, int **B)
+int **somarMatrizes(int **A, int **B, int linhas, int colunas)
 {
-
+    int **resultado = alocarMatriz(linhas, colunas);
+    int valorAtual;
+    for (int i = 0; i < linhas; i++)
+    {
+        for (int j = 0; j < colunas; j++)
+        {
+            valorAtual = A[i][j] + B[i][j];
+            resultado[i][j] = valorAtual;
+        }
+    }
+    return (resultado);
 }
 
 /*
