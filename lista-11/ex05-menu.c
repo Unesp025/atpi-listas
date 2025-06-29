@@ -20,7 +20,6 @@ char **redimensionarListaDePalavras(char **lista, int tamanhoAtual, int novoTama
     {
         strcpy(resultado[i], lista[i]);
     }
-
     return resultado;
 }
 
@@ -63,17 +62,23 @@ void imprimirMatriz(char **matriz, int linhas)
 
 void exibirCardapio(char **cardapio, int quantidadeItens)
 {
+    int itemAtual;
+    printf("\e[1;1H\e[2J");
+    printf("\n~ Menu ~\n-1 - concluir pedido\n 0 - exibir pedido\n\n");
+    for (int m = 0; m < quantidadeItens; m+=2)
+    {
+        itemAtual = (m/2)+1;
+        printf("%d - R$%s\t..... %s", itemAtual, cardapio[m], cardapio[m+1]); 
+    }
+}
+
+char **coletarPedido(char **cardapio, int quantidadeItens)
+{
     int entrada, itemAtual, tamanhoAtual = 10, contador = 0;
     char **pedido = alocarListaDePalavras(tamanhoAtual, 30);
     do 
     {
-        printf("\e[1;1H\e[2J");
-        printf("\n~ Menu ~\n-1 - concluir pedido\n 0 - exibir pedido\n\n");
-        for (int m = 0; m < quantidadeItens; m+=2)
-        {
-            itemAtual = (m/2)+1;
-            printf("%d - R$%s\t..... %s", itemAtual, cardapio[m], cardapio[m+1]); 
-        }
+        exibirCardapio(cardapio, quantidadeItens);
         printf("\n-\nInforme a opcao que deseja: ");
         scanf("%d", &entrada);
         
@@ -90,13 +95,13 @@ void exibirCardapio(char **cardapio, int quantidadeItens)
             itemAtual = ((entrada-1)*2)+1;
             if (itemAtual<=quantidadeItens-1 && entrada > 0)
             {
-                // printf("%s", cardapio[itemAtual]);
                 strcpy(pedido[contador],cardapio[itemAtual]);
                 contador++;
             }
         }
     }
     while(entrada != -1);
+    return (pedido);
 }
 
 char **obterListaDoArquivo(char caminho[50])
@@ -107,7 +112,7 @@ char **obterListaDoArquivo(char caminho[50])
         int tamanho = 50;
         char linha[tamanho];
         int quantidadeItens = obterQuantidadeItens(caminho);
-        char **ponteiroListaPedidos = alocarListaDePalavras(quantidadeItens * 2, tamanho); // por anotar tambem a qtd de cada item
+        char **ponteiroListaPedidos = alocarListaDePalavras(quantidadeItens * 2, tamanho);
         char *itemAtualQuantidade;
         char *itemAtualNome;
         fgets(linha, tamanho, input); 
@@ -122,8 +127,6 @@ char **obterListaDoArquivo(char caminho[50])
             strcpy(ponteiroListaPedidos[l], itemAtualQuantidade);
             strcpy(ponteiroListaPedidos[l+1], itemAtualNome);
         }
-        // free(itemAtualQuantidade);
-        // free(itemAtualNome);         // quando liberados esses espacos, o programa nao funciona.
         fclose(input);
         return (ponteiroListaPedidos);
     }
@@ -135,39 +138,3 @@ void escreverBoleto(char caminho[50], char **menu, char **tabelaPrecos)
 {
 
 }
-
-/*
-1 x sanduba         ..... R$5,00 (R$5,00/unidade)
-4 x sache-ketchup   ..... R$8,00 (R$2,00/unidade)
-*/
-
-/*
-teoria:
-    Sabemos que uma palavra é um array de chars. Um array de
-    chars pode ser representado por um ponteiro de char.
-        Enderecos sequenciais na memoria armazenam, cada um,
-        uma letra da palavra.
-    Assim, um array de palavras é um array de array de chars. 
-    Para fazer isso com ponteiros, alocamos um char **ptr.
-        Para cada endereco sequencial alocado, aponta-se para o 
-        array que contem uma palvra.
-    Um ponteiro de ponteiro de char é uma LISTA de palavras.
-    Uma matriz é uma LISTA de LISTAS.
-    Uma matriz de ints é um PONTEIRO de PONTEIRO de int. 
-    Logo uma matriz de chars é um PONTEIRO de PONTEIRO de PONTEIRO de chars.  
-    
-ideia:
-    Para evitar uma matriz de palavras, que envolveria char ***ptr..., 
-    vamos fazer:
-        Uma lista de palavras : Ponteiro de ponteiro de char. 
-        Cada elemento em posição par (0, 2, 4...) é o numero de itens.
-        Cada elemento em posição impar (1, 3, 5...) é o item em si. 
-
-problema:
-    Ao usar ponteiros para obter os valores de item e quantidade do arquivo,
-    a cada iteração, o valor naquele endereco muda.
-    Por isso, ao fim da execução, todos os enderecos apontam para goiabada...
-    (que é o ultimo item do menu)
-
-    O certo seria passar direto o valor para o ponteiro, não o endereço
-*/
