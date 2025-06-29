@@ -5,22 +5,25 @@
 
 int main()
 {
-    char caminhoMenu[50] = "./input/menu.txt";
-    char caminhoPrecos[50] = "./input/tabela-precos.txt";
+    char caminhoMenu[50] = "./output/menu.txt";
+    char caminhoBoleto[50] = "./output/boleto.txt";
+    char caminhoCardapio[50] = "./input/tabela-precos.txt";
 
     // int tamanho = obterQuantidadeItens(caminhoMenu)*2;
     // char **resposta = obterListaDoArquivo(caminhoMenu);
     // imprimirMatriz(resposta, tamanho);
     
-    int tamanhoPrecos = obterQuantidadeItens(caminhoPrecos)*2;
-    char **precos = obterListaDoArquivo(caminhoPrecos);
-    imprimirMatriz(precos, tamanhoPrecos);
-    exibirCardapio(precos, tamanhoPrecos);
+    int tamanhoCardapio = obterQuantidadeItens(caminhoCardapio)*2;
+    char **cardapio = obterListaDoArquivo(caminhoCardapio);
+    imprimirMatriz(cardapio, tamanhoCardapio);
 
-    // for (int i = 0; i < tamanho; i++)    
-    //     free(resposta[i]);
-    // free(resposta);
+    int tamanhoPedido;
+    char **pedido = coletarPedido(cardapio, tamanhoCardapio, &tamanhoPedido);
+    imprimirPedido(pedido, tamanhoPedido);
     
-    liberarListaDePalavras(precos, tamanhoPrecos);
+    produzirMenuEBoleto(pedido, tamanhoPedido, cardapio, tamanhoCardapio, caminhoMenu, caminhoBoleto);
+
+    liberarListaDePalavras(cardapio, tamanhoCardapio);
+    liberarListaDePalavras(pedido, tamanhoPedido);
     return(0);
 }

@@ -72,7 +72,7 @@ void exibirCardapio(char **cardapio, int quantidadeItens)
     }
 }
 
-char **coletarPedido(char **cardapio, int quantidadeItens)
+char **coletarPedido(char **cardapio, int quantidadeItens, int *tamanhoFinalPedido)
 {
     int entrada, itemAtual, tamanhoAtual = 10, contador = 0;
     char **pedido = alocarListaDePalavras(tamanhoAtual, 30);
@@ -101,6 +101,7 @@ char **coletarPedido(char **cardapio, int quantidadeItens)
         }
     }
     while(entrada != -1);
+    *tamanhoFinalPedido = contador; 
     return (pedido);
 }
 
@@ -133,8 +134,43 @@ char **obterListaDoArquivo(char caminho[50])
     return (NULL);
 }
 
-// fazer tabela de precos lida de um arquivo (char caminho[50], char **tabelaPrecos)
-void escreverBoleto(char caminho[50], char **menu, char **tabelaPrecos)
+void produzirMenuEBoleto(
+    char **pedido, int tamanhoPedido, 
+    char **cardapio, int tamanhoCardapio, 
+    char *caminhoMenu, char *caminhoBoleto
+)
 {
-
+    FILE *outputMenu = fopen(caminhoMenu, "w");
+    FILE *outputBoleto = fopen(caminhoBoleto, "w");
+    if (outputMenu!=NULL && outputBoleto!=NULL)
+    {
+        char *itemAtual, *precoAtual;
+        int contadorItemAtualNoPedido, contadorItensNoPedido = 0;
+        float precoTotal = 0;
+        for (int c = 0; c < tamanhoCardapio; c+=2)
+        {
+            precoAtual = cardapio[c];
+            itemAtual = cardapio[c+1];
+            contadorItemAtualNoPedido = 0;
+            precoTotal += atof(precoAtual);
+            for (int p = 0; p < tamanhoPedido; p++)
+            {
+                if (strcmp(pedido[p], itemAtual) == 0)
+                {
+                    contadorItemAtualNoPedido++;
+                }
+            }
+            if (contadorItemAtualNoPedido > 0)
+            {
+                contadorItensNoPedido ++;
+                fprintf(outputMenu, "%d %s", contadorItemAtualNoPedido, itemAtual);
+                fprintf(outputBoleto, "%d x R$%s\t ..... %s", contadorItemAtualNoPedido, precoAtual,itemAtual);
+            }
+        }
+        fprintf(outputBoleto, "Total a pagar: R$%.2f", precoTotal);
+        printf("Arquivo de menu criado com sucesso em: %s\n", caminhoMenu);
+        printf("Arquivo de boleto criado com sucesso em: %s\n", caminhoBoleto);
+        fclose(outputMenu);
+        fclose(outputBoleto);
+    }
 }
