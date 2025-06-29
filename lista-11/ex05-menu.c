@@ -13,6 +13,17 @@ char **alocarListaDePalavras(int linhas, int colunas)
     return ptrPalavras;
 }
 
+char **redimensionarListaDePalavras(char **lista, int novoTamanho)
+{
+    char **resultado = (char **) malloc(novoTamanho * sizeof(char *));
+    for (int i = 0; i < novoTamanho; i++)
+    {
+        strcpy(resultado[i], lista[i]);
+    }
+
+    return resultado;
+}
+
 int obterQuantidadeItens(char caminho[50])
 {
     FILE *input = fopen(caminho, "r");
@@ -27,12 +38,55 @@ int obterQuantidadeItens(char caminho[50])
     return (NULL);
 }
 
+void imprimirPedido(char **pedido, int tamanho)
+{
+    for (int i = 0; i < tamanho; i++)
+    {
+        printf("%s\n", pedido[i]);
+    }
+}
+
 void imprimirMatriz(char **matriz, int linhas)
 {
     for (int i = 0; i < linhas; i+=2)
     {
         printf("%s x %s", matriz[i], matriz[i+1]); 
     }
+}
+
+void exibirCardapio(char **cardapio, int quantidadeItens)
+{
+    int entrada, itemAtual, tamanhoAtual = 10, contador = 0;
+    char **pedido = alocarListaDePalavras(tamanhoAtual, 30);
+    do 
+    {
+        printf("\e[1;1H\e[2J");
+        printf("\n~ Menu ~\n-1 - concluir pedido\n 0 - exibir pedido\n\n");
+        for (int m = 0; m < quantidadeItens; m+=2)
+        {
+            itemAtual = (m/2)+1;
+            printf("%d - R$%s\t..... %s", itemAtual, cardapio[m], cardapio[m+1]); 
+        }
+        printf("\n-\nInforme a opcao que deseja: ");
+        scanf("%d", &entrada);
+
+        if (entrada == 0) 
+        {
+            imprimirPedido(pedido, contador+1);
+        }
+        else
+        {
+            itemAtual = ((entrada-1)*2)+1;
+            if (itemAtual<=quantidadeItens-1 && entrada > 0)
+            {
+                printf("%s", cardapio[itemAtual]);
+                // strcpy(pedido[contador],cardapio[((entrada-1)*2)+1]);
+                // pedido[contador]
+                contador++;
+            }
+        }
+    }
+    while(entrada != -1);
 }
 
 char **obterListaDoArquivo(char caminho[50])
