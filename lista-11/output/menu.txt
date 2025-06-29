@@ -1,6 +1,3 @@
-5
-1 cafe
-1 goiabada
-1 leite-achocolatado
-1 pao-mel
-2 pao-queijo
+2
+3 sache-ketchup
+1 sanduba

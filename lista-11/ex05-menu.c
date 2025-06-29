@@ -174,7 +174,6 @@ void produzirMenuEBoleto(
             precoAtual = cardapio[c];
             itemAtual = cardapio[c+1];
             contadorItemAtualNoPedido = 0;
-            precoTotal += atof(precoAtual);
             for (int p = 0; p < tamanhoPedido; p++)
             {
                 if (strcmp(pedido[p], itemAtual) == 0)
@@ -184,6 +183,7 @@ void produzirMenuEBoleto(
             }
             if (contadorItemAtualNoPedido > 0)
             {
+                precoTotal += contadorItemAtualNoPedido * atof(precoAtual);
                 contadorItensNoPedido ++;
                 fprintf(outputMenu, "%d %s", contadorItemAtualNoPedido, itemAtual);
                 fprintf(outputBoleto, "%d x R$%s\t ..... %s", contadorItemAtualNoPedido, precoAtual,itemAtual);
