@@ -19,7 +19,6 @@ int main()
 
     int tamanhoPedido;
     char **pedido = coletarPedido(cardapio, tamanhoCardapio, &tamanhoPedido);
-    imprimirPedido(pedido, tamanhoPedido);
     
     produzirMenuEBoleto(pedido, tamanhoPedido, cardapio, tamanhoCardapio, caminhoMenu, caminhoBoleto);
 

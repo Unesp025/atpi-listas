@@ -1,3 +1,6 @@
-3 cafe
-1 pao-queijo
-2 sanduba
+5
+1 cafe
+1 goiabada
+1 leite-achocolatado
+1 pao-mel
+2 pao-queijo

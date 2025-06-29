@@ -134,6 +134,27 @@ char **obterListaDoArquivo(char caminho[50])
     return (NULL);
 }
 
+void adicionarQuantidadeAoArquivo(char caminho[50], int quantidade, int totalLinhas)
+{
+    char caminhoTemp[50] = "./output/temp.txt";
+    FILE *input = fopen(caminho, "r");
+    FILE *temp = fopen(caminhoTemp, "w");
+    if (temp!=NULL)
+    {
+        fprintf(temp, "%d\n", quantidade);
+        char linha[50];
+        for(int i = 0; i < totalLinhas; i++)
+        {
+            fgets(linha, sizeof(linha), input);
+            fprintf(temp, linha);
+        }
+    }
+    fclose(input);
+    fclose(temp);
+    remove(caminho);
+    rename(caminhoTemp, caminho);
+}
+
 void produzirMenuEBoleto(
     char **pedido, int tamanhoPedido, 
     char **cardapio, int tamanhoCardapio, 
@@ -142,6 +163,7 @@ void produzirMenuEBoleto(
 {
     FILE *outputMenu = fopen(caminhoMenu, "w");
     FILE *outputBoleto = fopen(caminhoBoleto, "w");
+    
     if (outputMenu!=NULL && outputBoleto!=NULL)
     {
         char *itemAtual, *precoAtual;
@@ -172,5 +194,7 @@ void produzirMenuEBoleto(
         printf("Arquivo de boleto criado com sucesso em: %s\n", caminhoBoleto);
         fclose(outputMenu);
         fclose(outputBoleto);
+        adicionarQuantidadeAoArquivo(caminhoMenu, contadorItensNoPedido, contadorItensNoPedido);
+        adicionarQuantidadeAoArquivo(caminhoBoleto, contadorItensNoPedido, contadorItensNoPedido+1);
     }
 }
