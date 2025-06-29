@@ -13,7 +13,7 @@ char **alocarListaDePalavras(int linhas, int colunas)
     return ptrPalavras;
 }
 
-char **redimensionarListaDePalavras(char **lista, int novoTamanho)
+char **redimensionarListaDePalavras(char **lista, int tamanhoAtual, int novoTamanho)
 {
     char **resultado = (char **) malloc(novoTamanho * sizeof(char *));
     for (int i = 0; i < novoTamanho; i++)
@@ -22,6 +22,13 @@ char **redimensionarListaDePalavras(char **lista, int novoTamanho)
     }
 
     return resultado;
+}
+
+void liberarListaDePalavras(char **lista, int tamanho)
+{
+    for (int i = 0; i < tamanho; i++)    
+        free(lista[i]);
+    free(lista);
 }
 
 int obterQuantidadeItens(char caminho[50])
@@ -42,7 +49,7 @@ void imprimirPedido(char **pedido, int tamanho)
 {
     for (int i = 0; i < tamanho; i++)
     {
-        printf("%s\n", pedido[i]);
+        printf("* %s", pedido[i]);
     }
 }
 
@@ -69,19 +76,22 @@ void exibirCardapio(char **cardapio, int quantidadeItens)
         }
         printf("\n-\nInforme a opcao que deseja: ");
         scanf("%d", &entrada);
-
+        
         if (entrada == 0) 
         {
-            imprimirPedido(pedido, contador+1);
+            printf("\e[1;1H\e[2J");
+            printf("\n~ Pedido ~\n[ENTER] - voltar ao menu\n\n");
+            imprimirPedido(pedido, contador);
+            getchar();
+            getchar();
         }
         else
         {
             itemAtual = ((entrada-1)*2)+1;
             if (itemAtual<=quantidadeItens-1 && entrada > 0)
             {
-                printf("%s", cardapio[itemAtual]);
-                // strcpy(pedido[contador],cardapio[((entrada-1)*2)+1]);
-                // pedido[contador]
+                // printf("%s", cardapio[itemAtual]);
+                strcpy(pedido[contador],cardapio[itemAtual]);
                 contador++;
             }
         }
