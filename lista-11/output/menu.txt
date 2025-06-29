@@ -1,3 +1,8 @@
-2
-3 sache-ketchup
+7
+1 cafe
+1 goiabada
+1 leite-achocolatado
+3 pao-mel
+2 pao-queijo
+1 sache-ketchup
 1 sanduba

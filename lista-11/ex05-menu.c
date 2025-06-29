@@ -13,14 +13,11 @@ char **alocarListaDePalavras(int linhas, int colunas)
     return ptrPalavras;
 }
 
-char **redimensionarListaDePalavras(char **lista, int tamanhoAtual, int novoTamanho)
+char **redimensionarListaDePalavras(char **lista, int tamanhoAtual, int tamanhoNovo)
 {
-    char **resultado = (char **) malloc(novoTamanho * sizeof(char *));
-    for (int i = 0; i < novoTamanho; i++)
-    {
-        strcpy(resultado[i], lista[i]);
-    }
-    return resultado;
+    char **resultado = (char **) realloc(lista, tamanhoNovo * sizeof(char *));
+    if (resultado!=NULL) return resultado;
+    return (NULL);
 }
 
 void liberarListaDePalavras(char **lista, int tamanho)
@@ -97,6 +94,11 @@ char **coletarPedido(char **cardapio, int quantidadeItens, int *tamanhoFinalPedi
             {
                 strcpy(pedido[contador],cardapio[itemAtual]);
                 contador++;
+            }
+            if (contador == tamanhoAtual) 
+            {
+                entrada = -1;
+                // pedido = redimensionarListaDePalavras(pedido, tamanhoAtual, tamanhoAtual+10);
             }
         }
     }
