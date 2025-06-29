@@ -35,7 +35,7 @@ void imprimirMatriz(char **matriz, int linhas)
     }
 }
 
-char **obterMenuDeArquivo(char caminho[50])
+char **obterListaDoArquivo(char caminho[50])
 {
     FILE *input = fopen(caminho, "r");
     if (input!=NULL)
@@ -58,6 +58,8 @@ char **obterMenuDeArquivo(char caminho[50])
             strcpy(ponteiroListaPedidos[l], itemAtualQuantidade);
             strcpy(ponteiroListaPedidos[l+1], itemAtualNome);
         }
+        // free(itemAtualQuantidade);
+        // free(itemAtualNome);         // quando liberados esses espacos, o programa nao funciona.
         fclose(input);
         return (ponteiroListaPedidos);
     }
@@ -65,10 +67,15 @@ char **obterMenuDeArquivo(char caminho[50])
 }
 
 // fazer tabela de precos lida de um arquivo (char caminho[50], char **tabelaPrecos)
-void escreverBoleto(char caminho[50])
+void escreverBoleto(char caminho[50], char **menu, char **tabelaPrecos)
 {
 
 }
+
+/*
+1 x sanduba         ..... R$5,00 (R$5,00/unidade)
+4 x sache-ketchup   ..... R$8,00 (R$2,00/unidade)
+*/
 
 /*
 teoria:
