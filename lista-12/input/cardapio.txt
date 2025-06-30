@@ -1,0 +1,9 @@
+8
+1.00 agua
+2.50 arroz-doce
+0.30 bala-chita
+6.0 batatitas
+7.50 hamurguer
+5.30 lanche-natural
+3.0 suco-uva
+0.80 yakult
