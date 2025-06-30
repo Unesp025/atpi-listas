@@ -65,6 +65,17 @@ void imprimirAlunos(No *lista)
     }
 }
 
+void liberarLista(No *head)
+{
+    while (head->proximo!=NULL)
+    {
+        No *temp = head->proximo;
+        free(head->aluno);
+        free(head);
+        head = temp;
+    }
+}
+
 int main()
 {
     Aluno *a, *b, *c;
