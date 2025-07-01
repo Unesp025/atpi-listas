@@ -1,2 +1,4 @@
-1
-12 x R$1.00	..... agua
+2
+11 x R$1.00	..... agua
+1 x R$7.50	..... hamurguer
+Total a pagar: R$18.50

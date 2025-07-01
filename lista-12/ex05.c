@@ -277,27 +277,28 @@ ItemMenu *coletarPedido(ItemCardapio *cardapio)
 
 void escreverArquivosMenuEBoleto(ItemMenu *menu, char caminhoMenuTxt[30], char caminhoBoletoTxt[30])
 {
-    FILE *inputMenu = fopen (caminhoMenuTxt, "w");
-    FILE *inputBoleto = fopen(caminhoBoletoTxt, "w");
+    FILE *outputMenu = fopen (caminhoMenuTxt, "w");
+    FILE *outputBoleto = fopen(caminhoBoletoTxt, "w");
     int quantidadeItens = obterQuantidadeItensMenu(menu);
-
+    float precoTotal = 0;
     ItemMenu *atual = menu;
-    fprintf(inputMenu, "%d\n", quantidadeItens);
-    fprintf(inputBoleto, "%d\n", quantidadeItens);
+    fprintf(outputMenu, "%d\n", quantidadeItens);
+    fprintf(outputBoleto, "%d\n", quantidadeItens);
     while (atual!=NULL)
     {
-        fprintf(inputMenu, "%d x %s",
+        fprintf(outputMenu, "%d x %s",
           atual->opcao->quantidade, atual->opcao->produto->nome
         );
-        fprintf(inputBoleto, "%d x R$%.2f\t..... %s",
+        fprintf(outputBoleto, "%d x R$%.2f\t..... %s",
             atual->opcao->quantidade, atual->opcao->produto->preco, atual->opcao->produto->nome
         );
+        precoTotal += (atual->opcao->quantidade * atual->opcao->produto->preco);
         atual = atual->proximo;
     }
 
-    // calcular preco total;
-    fclose(inputMenu);
-    fclose(inputBoleto);
+    fprintf(outputBoleto, "Total a pagar: R$%.2f", precoTotal);
+    fclose(outputMenu);
+    fclose(outputBoleto);
 }
 
 /*
