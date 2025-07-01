@@ -5,6 +5,9 @@ int main()
 {
     char caminhoCardapio[30] = "./input/cardapio.txt";
     ItemCardapio *cardapio = obterCardapioDoArquivo(caminhoCardapio);
-    imprimirCardapio(cardapio);
+    // exibirCardapioIndexado(cardapio);
+    ItemMenu *menu = coletarPedido(cardapio);    
+    printf("\nImprimindo menu final:\n");
+    imprimirMenu(menu);
     return(0);
 }

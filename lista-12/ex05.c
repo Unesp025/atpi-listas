@@ -14,6 +14,17 @@ typedef struct itemCardapio
     struct itemCardapio *proximo;
 } ItemCardapio;
 
+typedef struct
+{
+    int quantidade;
+    Produto *produto;
+} Opcao;
+
+typedef struct itemMenu
+{
+    Opcao *opcao;
+    struct itemMenu *proximo;
+} ItemMenu;
 
 Produto *inicializarProduto(char nome[30], float preco)
 {
@@ -31,6 +42,11 @@ void atualizarProduto(Produto *produto, char novoNome[30], float novoPreco)
 {
     strcpy(produto->nome, novoNome);
     produto->preco = novoPreco;
+}
+
+void imprimirProduto (Produto *produto)
+{
+    printf("R$%.2f\t..... %s", produto->preco, produto->nome);
 }
 
 ItemCardapio *inicializarItemCardapio(Produto *produto)
@@ -58,20 +74,73 @@ ItemCardapio *adicionarItemAoCardapio(ItemCardapio *cardapio, Produto *produto)
     }
 }
 
-void imprimirProduto (Produto *produto)
+ItemCardapio *obterItemCardapioPorIndice(ItemCardapio *cardapio, int indice)
 {
-    printf("R$%.2f\t..... %s", produto->preco, produto->nome);
+    if (indice < 0) return NULL;
+    int contador = 0;
+    ItemCardapio *atual = cardapio;
+    while (contador < indice)
+    {
+        if (atual->proximo == NULL) return NULL; // index out of bounds exception
+        atual = atual->proximo;
+        contador++;
+    }
+    return (atual);
 }
 
 void imprimirCardapio (ItemCardapio *cardapio)
 {
     ItemCardapio *atual = cardapio;
-    while(atual->proximo!=NULL)
+    while(atual!=NULL)
     {
         imprimirProduto(atual->produto);
         atual = atual->proximo;
     }
-    free(atual);
+}
+
+Opcao *inicializarOpcao(int quantidade, Produto *produto)
+{
+    Opcao *opcao = (Opcao *) malloc(sizeof(Opcao));
+    if (opcao==NULL) return NULL;
+
+    opcao->quantidade = quantidade;
+    opcao->produto = produto;
+    return (opcao);
+}
+
+void imprimirOpcao(Opcao *opcao)
+{
+    printf("%d x %s", opcao->quantidade, opcao->produto->nome);
+}
+
+ItemMenu *inicializarItemMenu(Opcao *opcao)
+{
+    ItemMenu *item = (ItemMenu *) malloc(sizeof(ItemMenu));
+    if (item==NULL) return NULL;
+    item->opcao = opcao;
+    item->proximo = NULL;
+    return (item);
+}
+
+void imprimirMenu(ItemMenu *menu)
+{
+    ItemMenu *atual = menu;
+    while(atual != NULL)
+    {
+        printf("%d x %s", menu->opcao->quantidade, menu->opcao->produto->nome);
+        atual = atual->proximo;
+    }
+}
+
+ItemMenu *adicionarItemAoMenu(ItemMenu *menu, Opcao *opcao)
+{
+    if (menu->proximo==NULL)
+    {
+        ItemMenu *novo = inicializarItemMenu(opcao);
+        menu->proximo = novo;
+        return (novo);
+    }
+    return (adicionarItemAoMenu(menu->proximo, opcao));
 }
 
 ItemCardapio *obterCardapioDoArquivo(char caminho[30])
@@ -104,6 +173,61 @@ ItemCardapio *obterCardapioDoArquivo(char caminho[30])
     }
     fclose(input);
     return (cardapio);
+}
+
+void exibirCardapioIndexado(ItemCardapio *cardapio)
+{
+    int indice = 1;
+    ItemCardapio *itemAtual = cardapio;
+    printf("\n~ Menu ~\n-1 - Concluir pedido\n 0 - Exibir pedido\n");
+    while (itemAtual!=NULL)
+    {
+        printf("%d - R$%.2f\t..... %s", indice, itemAtual->produto->preco, itemAtual->produto->nome);
+        itemAtual = itemAtual->proximo;
+        indice++;
+    }
+}
+
+ItemMenu *coletarPedido(ItemCardapio *cardapio)
+{
+    int entrada, quantidadeItems = 0;
+    ItemMenu *menu;
+    do
+    {
+        printf("\e[1;1H\e[2J");
+        exibirCardapioIndexado(cardapio);
+        printf("\nInforme o item que deseja adicionar ao pedido: ");
+        scanf("%d", &entrada);
+        
+        if (entrada == 0)
+        {
+            printf("\e[1;1H\e[2J");
+            printf("\n~ Pedido ~\n[ENTER] - Voltar ao cardapio\n\n");
+            if (quantidadeItems>0) imprimirMenu(menu);
+            else printf("Nenhum item adicionado ate o momento");
+            getchar();
+            getchar();
+        }
+        else
+        {
+            ItemCardapio *itemAtual = obterItemCardapioPorIndice(cardapio, entrada-1);
+            Opcao *opcaoAtual = inicializarOpcao(1, itemAtual->produto);
+            imprimirOpcao(opcaoAtual);
+    
+            if (quantidadeItems == 0)
+            {
+                menu = inicializarItemMenu(opcaoAtual);
+            }
+            else
+            {
+                adicionarItemAoMenu(menu, opcaoAtual);
+            }
+            quantidadeItems++;
+        }
+
+    }
+    while (entrada != -1);
+    return (menu);
 }
 
 /*
