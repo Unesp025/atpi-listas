@@ -155,6 +155,39 @@ ItemMenu *adicionarItemAoMenu(ItemMenu *menu, Opcao *opcao)
     return (adicionarItemAoMenu(menu->proximo, opcao));
 }
 
+void reunirDuplicadasMenu(ItemMenu *menu)
+{
+    ItemMenu *atual = menu;
+    while(atual!=NULL)
+    {
+        ItemMenu *atualInterno = atual->proximo;
+        ItemMenu *anteriorInterno = atual;
+        int comparacao;
+        while(atualInterno!=NULL)
+        {
+            comparacao = strcmp(atualInterno->opcao->produto->nome, atual->opcao->produto->nome);
+            if (comparacao == 0)
+            {
+                // printf("\nEncontrados itens repetidos: %s\n", atualInterno->opcao->produto->nome);
+                anteriorInterno->proximo = atualInterno->proximo;
+                free(atualInterno->opcao);
+                atual->opcao->quantidade++;
+                break;
+            }
+            else
+            {
+                anteriorInterno = anteriorInterno->proximo;
+                atualInterno = atualInterno->proximo;
+            }
+        }
+        if (comparacao != 0) atual = atual->proximo;
+        else
+        {
+            if (atual->proximo == NULL) break;
+        }
+    }
+}
+
 ItemCardapio *obterCardapioDoArquivo(char caminho[30])
 {
     ItemCardapio *cardapio;
@@ -225,9 +258,7 @@ ItemMenu *coletarPedido(ItemCardapio *cardapio)
             ItemCardapio *itemAtual = obterItemCardapioPorIndice(cardapio, entrada-1);
             if (itemAtual != NULL)
             {
-                Opcao *opcaoAtual = inicializarOpcao(1, itemAtual->produto);
-                imprimirOpcao(opcaoAtual);
-        
+                Opcao *opcaoAtual = inicializarOpcao(1, itemAtual->produto);        
                 if (quantidadeItems == 0)
                 {
                     menu = inicializarItemMenu(opcaoAtual);
@@ -244,11 +275,12 @@ ItemMenu *coletarPedido(ItemCardapio *cardapio)
     return (menu);
 }
 
-void escreverArquivosMenuEBoleto(ItemMenu *menu, int quantidadeItens, char caminhoMenuTxt[30], char caminhoBoletoTxt[30])
+void escreverArquivosMenuEBoleto(ItemMenu *menu, char caminhoMenuTxt[30], char caminhoBoletoTxt[30])
 {
     FILE *inputMenu = fopen (caminhoMenuTxt, "w");
     FILE *inputBoleto = fopen(caminhoBoletoTxt, "w");
-    
+    int quantidadeItens = obterQuantidadeItensMenu(menu);
+
     ItemMenu *atual = menu;
     fprintf(inputMenu, "%d\n", quantidadeItens);
     fprintf(inputBoleto, "%d\n", quantidadeItens);

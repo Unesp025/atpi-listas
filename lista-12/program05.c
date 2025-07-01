@@ -8,9 +8,11 @@ int main()
     char caminhoMenu[30] = "./output/menu.txt";
     char caminhoBoleto[30] = "./output/boleto.txt";
     ItemCardapio *cardapio = obterCardapioDoArquivo(caminhoCardapio);
-    exibirCardapioIndexado(cardapio);
     ItemMenu *menu = coletarPedido(cardapio);    
-    escreverArquivosMenuEBoleto(menu, obterQuantidadeItensMenu(menu), caminhoMenu, caminhoBoleto);
+    
+    reunirDuplicadasMenu(menu);
+    imprimirMenu(menu);
+    escreverArquivosMenuEBoleto(menu, caminhoMenu, caminhoBoleto);
 
     return(0);
 }
