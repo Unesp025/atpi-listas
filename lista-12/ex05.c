@@ -132,6 +132,18 @@ void imprimirMenu(ItemMenu *menu)
     }
 }
 
+int obterQuantidadeItensMenu(ItemMenu *menu)
+{
+    ItemMenu *atual = menu;
+    int contador = 0;
+    while(atual!=NULL)
+    {
+        contador++;
+        atual = atual->proximo;
+    }
+    return (contador);
+}
+
 ItemMenu *adicionarItemAoMenu(ItemMenu *menu, Opcao *opcao)
 {
     if (menu->proximo==NULL)
@@ -230,6 +242,30 @@ ItemMenu *coletarPedido(ItemCardapio *cardapio)
     }
     while (entrada != -1);
     return (menu);
+}
+
+void escreverArquivosMenuEBoleto(ItemMenu *menu, int quantidadeItens, char caminhoMenuTxt[30], char caminhoBoletoTxt[30])
+{
+    FILE *inputMenu = fopen (caminhoMenuTxt, "w");
+    FILE *inputBoleto = fopen(caminhoBoletoTxt, "w");
+    
+    ItemMenu *atual = menu;
+    fprintf(inputMenu, "%d\n", quantidadeItens);
+    fprintf(inputBoleto, "%d\n", quantidadeItens);
+    while (atual!=NULL)
+    {
+        fprintf(inputMenu, "%d x %s",
+          atual->opcao->quantidade, atual->opcao->produto->nome
+        );
+        fprintf(inputBoleto, "%d x R$%.2f\t..... %s",
+            atual->opcao->quantidade, atual->opcao->produto->preco, atual->opcao->produto->nome
+        );
+        atual = atual->proximo;
+    }
+
+    // calcular preco total;
+    fclose(inputMenu);
+    fclose(inputBoleto);
 }
 
 /*
