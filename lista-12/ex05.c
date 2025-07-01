@@ -198,7 +198,7 @@ ItemMenu *coletarPedido(ItemCardapio *cardapio)
         exibirCardapioIndexado(cardapio);
         printf("\nInforme o item que deseja adicionar ao pedido: ");
         scanf("%d", &entrada);
-        
+        if (entrada<0) break;
         if (entrada == 0)
         {
             printf("\e[1;1H\e[2J");
@@ -211,20 +211,22 @@ ItemMenu *coletarPedido(ItemCardapio *cardapio)
         else
         {
             ItemCardapio *itemAtual = obterItemCardapioPorIndice(cardapio, entrada-1);
-            Opcao *opcaoAtual = inicializarOpcao(1, itemAtual->produto);
-            imprimirOpcao(opcaoAtual);
-    
-            if (quantidadeItems == 0)
+            if (itemAtual != NULL)
             {
-                menu = inicializarItemMenu(opcaoAtual);
+                Opcao *opcaoAtual = inicializarOpcao(1, itemAtual->produto);
+                imprimirOpcao(opcaoAtual);
+        
+                if (quantidadeItems == 0)
+                {
+                    menu = inicializarItemMenu(opcaoAtual);
+                }
+                else
+                {
+                    adicionarItemAoMenu(menu, opcaoAtual);
+                }
+                quantidadeItems++;
             }
-            else
-            {
-                adicionarItemAoMenu(menu, opcaoAtual);
-            }
-            quantidadeItems++;
         }
-
     }
     while (entrada != -1);
     return (menu);
