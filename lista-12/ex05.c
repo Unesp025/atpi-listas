@@ -127,7 +127,7 @@ void imprimirMenu(ItemMenu *menu)
     ItemMenu *atual = menu;
     while(atual != NULL)
     {
-        printf("%d x %s", menu->opcao->quantidade, menu->opcao->produto->nome);
+        printf("%d x %s\n", atual->opcao->quantidade, atual->opcao->produto->nome);
         atual = atual->proximo;
     }
 }
